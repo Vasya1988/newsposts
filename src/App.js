@@ -17,6 +17,17 @@ function App() {
   useEffect(()=>{
     responseApi()
   }, [])
+   useEffect(() => {
+    const newsUpdate = (scrollChange) => {
+      console.log(window.scrollY, window.innerHeight, document.body.offsetHeight)
+    }
+
+    window.addEventListener('scroll', (e) => newsUpdate(e))
+
+    return window.removeEventListener('scroll', newsUpdate)
+   }, [])
+    
+
   
   console.log('--> ', posts)
   return (
