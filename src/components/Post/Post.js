@@ -6,7 +6,7 @@ const Post = (props) => {
     return (
         <div className={Styles.Post}>
             <h2>
-                {props.name}
+                {`${props.userId} - ${props.name}`}
             </h2>
 
             <span>{props.post}</span>

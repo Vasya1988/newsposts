@@ -6,7 +6,7 @@ const Framepost = (props) => {
     return (
         <div className={Styles.Framepost}>
             {
-                props.posts.map(post => <Post key={post.id} name={post.title} post={post.body} />)
+                props.posts.map(post => <Post key={post.id} name={post.title} post={post.body} userId={post.userId} />)
             }
         </div>
     )
