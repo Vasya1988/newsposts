@@ -32,11 +32,13 @@ function App() {
     if (pageCounter < 5) {
       if (scrollCurrent + visiblePageHeight === height) {
         setPageCounter(pageCounter + 1)
+        console.log(scrollCurrent + visiblePageHeight, height)
       }
     }
   }
 
   useEffect(() => {
+    console.log(posts)
     // Запрос новостей к api
     responseApi(pageCounter)
 
@@ -54,7 +56,7 @@ function App() {
       <Framepost posts={posts} />
       {
         // Добавляем кнопку на страницу
-        pageCounter >= 5 
+        pageCounter >= 5
           ? <button onClick={() => {
                 setPageCounter(pageCounter + 1)}}
             >
