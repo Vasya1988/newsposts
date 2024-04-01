@@ -1,71 +1,75 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import './App.sass';
-import Framepost from './components/Framepost/Framepost'
+import Framepost from './components/Framepost/Framepost';
 
 function App() {
 
-  // Массив в который добавляются новости
+  // Массив с подгружаемыми новостями
   const [posts, setPosts] = useState([])
 
-  // Счетчик подгружаемых новостей
+  // Счетчик для событий скролла
   const [pageCounter, setPageCounter] = useState(1)
 
-  // Функция запрос API
-  const responseApi = (page=1) => {
+  // Состояние загрузки новых новостей с API
+  const [check, setCheck] = useState(false)
+
+  // Обращаемся к API  сновостями, добавляем их в массив posts
+  const responseApi = useCallback((page=1) => {
+
+    // Ставим состояние загрузки в true
+    setCheck(true)
+    
     fetch(`https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${page}`)
       .then(response => response.json())
-      .then(res => setPosts([...posts, ...res]))
-      // .then(res => setPosts(res))
-  }
+      .then(res => {
+        setPosts(prev => [...prev, ...res]);
+        // Когда новости добавили в массив posts, возвращаем false
+        setCheck(false)
+      })
+  }, [])
 
-  // Функция отслеживания положение скролла
-  const scrollPosition = (scroll) => {
+  // Функция для отслеживание положени скролла
+  const scrollPosition = useCallback((scrollChange) => {
     
-    const height = scroll.target.documentElement.scrollHeight
-
-    const scrollCurrent = scroll.target.documentElement.scrollTop
-
-    const visiblePageHeight = window.innerHeight
-
-    // Остановка добавления новостей по скроллу, после 5 подгрузок
-    if (pageCounter < 5) {
-      if (scrollCurrent + visiblePageHeight === height) {
-        setPageCounter(pageCounter + 1)
-        console.log(scrollCurrent + visiblePageHeight, height)
-      }
+    const innerHeight = window.innerHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const heightOffset = document.documentElement.offsetHeight;
+    
+    // Если состояние загрузки false и было меньше 5 прокруток скролла
+    // обновляем счетчик pageCounter
+    if (!check && pageCounter < 5 && innerHeight + scrollTop >= heightOffset - 200) {
+      setPageCounter(prev => prev + 1)
     }
-  }
+  }, [check])
 
+  // Запускаем каждый раз, когда обвноляется pageCounter, 
+  // для отрисовки новых новостей
+  useEffect(() => {responseApi(pageCounter); console.log(posts)}, [pageCounter, responseApi])
+
+  // Запускаем событие scroll
   useEffect(() => {
-    console.log(posts)
-    // Запрос новостей к api
-    responseApi(pageCounter)
-
-    // Добавление события сролл
     window.addEventListener('scroll', scrollPosition)
-
     return () => {
       window.removeEventListener('scroll', scrollPosition)
     }
-  }, [pageCounter]) // Запускаем useEffect каждый раз после обновления pageCounter
+  }, [scrollPosition])
 
   return (
     <div className="App">
 
       <Framepost posts={posts} />
       {
-        // Добавляем кнопку на страницу
-        pageCounter >= 5
-          ? <button onClick={() => {
-                setPageCounter(pageCounter + 1)}}
-            >
-              Загрузить еще
-            </button>
-          : false
+        pageCounter >= 5 && pageCounter < 10 && <button
+          onClick={() => {
+            setPageCounter(pageCounter + 1)
+            console.log(pageCounter)
+          }}
+        >
+          Загрузить еще
+        </button>
       }
     </div>
   );
 }
-
 export default App;
