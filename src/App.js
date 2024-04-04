@@ -2,6 +2,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import './App.sass';
 import Framepost from './components/Framepost/Framepost';
+import { Route, Routes, useParams } from 'react-router-dom';
+import {InnerPost} from './components/InnerPost/InnerPost';
 
 function App() {
 
@@ -57,18 +59,11 @@ function App() {
 
   return (
     <div className="App">
-
-      <Framepost posts={posts} />
-      {
-        pageCounter >= 5 && pageCounter < 10 && <button
-          onClick={() => {
-            setPageCounter(pageCounter + 1)
-            console.log(pageCounter)
-          }}
-        >
-          Загрузить еще
-        </button>
-      }
+      {/* <Framepost posts={posts} /> */}
+      <Routes>
+        <Route path='/' element={<Framepost counter={{pageCounter: pageCounter, setPageCounter: setPageCounter}} posts={posts} />} />
+        <Route path="/post/:postId" element={<InnerPost />} />
+      </Routes>
     </div>
   );
 }
