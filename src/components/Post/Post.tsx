@@ -1,7 +1,12 @@
-import { Link, Routes, Route } from 'react-router-dom'
 import Styles from './Post.module.sass'
 
-const Post = (props) => {
+interface PostProps {
+    name?: string,
+    userId?: number,
+    post?: string,
+    postId?: number
+}
+const Post = (props: PostProps ) => {
 
     return (
         <>

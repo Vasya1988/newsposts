@@ -2,16 +2,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import './App.sass';
 import Framepost from './components/Framepost/Framepost';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import {InnerPost} from './components/InnerPost/InnerPost';
 
 function App() {
 
   // Массив с подгружаемыми новостями
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState([] as object[])
 
   // Счетчик для событий скролла
-  const [pageCounter, setPageCounter] = useState(1)
+  const [pageCounter, setPageCounter] = useState<number>(1 )
 
   // Состояние загрузки новых новостей с API
   const [check, setCheck] = useState(false)
@@ -32,7 +32,7 @@ function App() {
   }, [])
 
   // Функция для отслеживание положени скролла
-  const scrollPosition = useCallback((scrollChange) => {
+  const scrollPosition = useCallback(() => {
     
     const innerHeight = window.innerHeight;
     const scrollTop = document.documentElement.scrollTop;

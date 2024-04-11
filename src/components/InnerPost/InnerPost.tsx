@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import  {useParams} from 'react-router-dom';
+import  {Link, useParams} from 'react-router-dom';
+import { ButtonBack } from '../buttons/ButtonBack/ButtonBack';
 
 const InnerPost = () => {
     const { postId } = useParams();
-    const [post, setPost] = useState(null)
+    const [post, setPost] = useState({title: '', body: ''})
 
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
@@ -21,6 +22,10 @@ const InnerPost = () => {
                     </>
                 )
             }
+            <Link to="/">
+                <ButtonBack />
+            </Link>
+            
         </div>
     )
 }
